@@ -1,0 +1,1094 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Luis Obispo Community Ice Rink</title>
+
+  <style>
+    :root{
+      /* Brand-ish palette */
+      --navy:#0b1f3a;
+      --navy2:#163a63;
+      --ice:#8fbad9;
+      --accent:#4fa3d1;
+      --mint:#1e8c4a;
+
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --text:#141414;
+      --muted: rgba(20,20,20,0.72);
+
+      --shadow: 0 18px 40px rgba(0,0,0,0.10);
+      --shadow2: 0 10px 24px rgba(0,0,0,0.08);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    /* Animated background */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(79,163,209,0.20), transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(143,186,217,0.18), transparent 48%),
+        radial-gradient(circle at 50% 100%, rgba(11,31,58,0.10), transparent 55%);
+      animation: drift 14s ease-in-out infinite;
+    }
+    @keyframes drift{
+      0%,100%{ filter: blur(0px); transform: translateY(0px); }
+      50%{ filter: blur(1px); transform: translateY(6px); }
+    }
+
+    .container{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 22px 18px 118px; /* room for sticky contact bar */
+    }
+
+    /* Top hero card */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, rgba(11,31,58,1), rgba(22,58,99,1));
+      color:#fff;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-45%;
+      background:
+        radial-gradient(circle at 25% 25%, rgba(143,186,217,0.35), transparent 56%),
+        radial-gradient(circle at 70% 40%, rgba(79,163,209,0.24), transparent 60%);
+      transform: rotate(10deg);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      z-index:1;
+      padding: 18px 16px 16px;
+      text-align:center;
+    }
+
+    .logo{
+      max-width: 270px;
+      width: 100%;
+      height:auto;
+      display:block;
+      margin: 6px auto 8px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.22));
+      transform-origin:center;
+      animation: logoPop 900ms cubic-bezier(.2,.8,.2,1) 1;
+    }
+    @keyframes logoPop{
+      from{ transform: scale(0.94); opacity:0.0; }
+      to{ transform: scale(1); opacity:1; }
+    }
+
+    .headline{
+      font-size: clamp(1.65rem, 2.6vw, 2.25rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin: 4px 0 6px;
+    }
+    .subhead{
+      max-width: 820px;
+      margin: 0 auto 12px;
+      color: rgba(255,255,255,0.92);
+      font-size: 1.06rem;
+    }
+
+    /* Pills row (jump links + new tabs) */
+    .pill-row{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 10px 0 14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      text-decoration:none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: transform .15s ease, background .15s ease;
+      white-space:nowrap;
+      backdrop-filter: blur(8px);
+    }
+    .pill:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.16); }
+    .pill:active{ transform: translateY(0px); }
+
+    /* Donate buttons */
+    .cta{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .btn{
+      display:inline-block;
+      padding:12px 18px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight: 900;
+      color:#fff;
+      white-space:nowrap;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.20);
+      transition: transform .15s ease, filter .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .btn:active{ transform: translateY(0px); }
+
+    .btn.gfm{ background:#0b4f6c; }
+    .btn.pp { background: var(--mint); }
+
+    @media (max-width: 420px){
+      .btn{ width:100%; text-align:center; }
+    }
+
+    /* QR area */
+    .qr-wrap{
+      margin:16px 0 6px;
+      display:flex;
+      justify-content:center;
+      gap:34px;
+      flex-wrap:wrap;
+      text-align:center;
+    }
+    .qr{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 16px;
+      padding: 10px 10px 8px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+      backdrop-filter: blur(10px);
+      min-width: 172px;
+    }
+    .qr img{
+      width:140px;
+      height:140px;
+      object-fit:contain;
+      background:#fff;
+      padding:8px;
+      border-radius:12px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    .qr-label{
+      margin-top:8px;
+      font-size:0.95rem;
+      font-weight:900;
+      letter-spacing:0.01em;
+    }
+    .qr-sub{
+      margin-top:2px;
+      font-size:0.86rem;
+      color: rgba(255,255,255,0.85);
+      font-weight:800;
+    }
+
+    /* Sections */
+    .section{
+      margin-top: 18px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px 16px;
+      border: 1px solid rgba(11,31,58,0.07);
+    }
+    .section h2{
+      margin: 0 0 8px;
+      color: var(--navy);
+      letter-spacing:-0.02em;
+    }
+    .lead{
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .card{
+      background:#fff;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(11,31,58,0.08);
+    }
+    .card strong{ color: var(--navy); }
+
+    .mini-cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 12px;
+    }
+    .mini{
+      display:inline-block;
+      padding:10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(11,31,58,0.12);
+      text-decoration:none;
+      font-weight: 900;
+      color: var(--navy);
+      background: rgba(143,186,217,0.16);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .mini:hover{ transform: translateY(-1px); background: rgba(143,186,217,0.20); }
+
+    /* Accordion */
+    details{
+      background:#fff;
+      border-radius:16px;
+      border: 1px solid rgba(11,31,58,0.10);
+      padding: 12px 12px;
+    }
+    details + details{ margin-top:10px; }
+    summary{
+      cursor:pointer;
+      font-weight: 900;
+      color: var(--navy);
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    summary:after{
+      content:"＋";
+      float:right;
+      color: rgba(11,31,58,0.65);
+      font-weight: 900;
+    }
+    details[open] summary:after{ content:"—"; }
+
+    /* Reveal on scroll */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* Sticky contact bar */
+    .contact-bar{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      background: rgba(8,21,40,0.92);
+      color:#fff;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+    }
+    .contact-inner{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap:wrap;
+    }
+    .contact-inner a{
+      color:#fff;
+      text-decoration:none;
+      font-weight: 900;
+    }
+    .contact-inner a:hover{ text-decoration: underline; }
+    .contact-meta{
+      color: rgba(255,255,255,0.84);
+      font-weight: 800;
+      font-size: 0.96rem;
+    }
+    .contact-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .smallbtn{
+      display:inline-block;
+      padding: 9px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      text-decoration:none;
+      font-weight: 900;
+      color:#fff;
+      white-space:nowrap;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .smallbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.16); }
+    .smallbtn:active{ transform: translateY(0px); }
+
+    footer{
+      text-align:center;
+      color: rgba(20,20,20,0.70);
+      margin-top: 18px;
+      font-size: 0.95rem;
+    }
+
+    /* Tiny “shine” animation on hero buttons */
+    .btn.shine{
+      position:relative;
+      overflow:hidden;
+    }
+    .btn.shine:before{
+      content:"";
+      position:absolute;
+      top:-60%;
+      left:-30%;
+      width: 40%;
+      height: 220%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: rotate(18deg);
+      animation: shine 4.2s ease-in-out infinite;
+    }
+    @keyframes shine{
+      0%,60%{ left:-45%; opacity:0; }
+      70%{ opacity:1; }
+      100%{ left:120%; opacity:0; }
+    }
+
+    /* Fundraising campaign callout */
+    .campaign{
+      margin-top: 14px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 16px;
+      padding: 14px 12px 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+      backdrop-filter: blur(10px);
+      text-align:left;
+      max-width: 900px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .campaign h3{
+      margin:0 0 6px;
+      font-size:1.15rem;
+      letter-spacing:-0.02em;
+    }
+    .campaign p{
+      margin: 6px 0;
+      color: rgba(255,255,255,0.92);
+      font-weight: 700;
+    }
+    .campaign .fine{
+      margin-top: 10px;
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.82);
+      font-weight: 700;
+      line-height:1.5;
+    }
+
+    /* NEW: campaign clarity boxes */
+    .rules{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .rule{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 10px 10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .rule .k{
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .rule .v{
+      color: rgba(255,255,255,0.90);
+      font-weight: 750;
+      font-size: 0.95rem;
+      line-height: 1.35;
+    }
+    .tag{
+      display:inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.10);
+      font-weight: 900;
+      font-size: 0.78rem;
+      margin-left: 6px;
+      vertical-align: middle;
+      white-space:nowrap;
+    }
+
+    /* Progress bar */
+    .progress-wrap{
+      margin-top: 10px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      height: 14px;
+      overflow:hidden;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.18);
+    }
+    .progress-bar{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79,163,209,0.95), rgba(143,186,217,0.95));
+      transition: width 900ms ease;
+    }
+    .progress-meta{
+      margin-top: 8px;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:8px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.92);
+      font-size: 0.95rem;
+    }
+
+    /* Mailing list */
+    .signup{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:stretch;
+    }
+    .signup input{
+      width: min(420px, 92vw);
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+      outline:none;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+    }
+    .signup input::placeholder{ color: rgba(255,255,255,0.75); font-weight:800; }
+    .signup .btn{
+      border: 0;
+      cursor: pointer;
+      padding:12px 18px;
+    }
+    .btn.mail{ background: rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.22); }
+    .btn.mail:hover{ filter: brightness(1.06); }
+
+    .form-note{
+      margin-top: 8px;
+      text-align:center;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.82);
+      font-weight: 700;
+    }
+
+    /* Sponsorship Tiers */
+    .sponsorship {
+      padding: 80px 20px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      border: 1px solid rgba(11,31,58,0.07);
+      margin-top: 18px;
+    }
+
+    .sponsorship .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sponsorship h2 {
+      font-size: 42px;
+      margin: 0 0 12px;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .sponsorship .lead {
+      font-size: 18px;
+      color: #444;
+      max-width: 760px;
+      margin: 0 0 40px;
+    }
+
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .tier {
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      background: #fff;
+    }
+
+    .tier.featured {
+      border: 2px solid #0b1f3a;
+    }
+
+    .tier h3 {
+      margin-top: 0;
+      color: var(--navy);
+    }
+
+    .amount {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+      margin: 0 0 10px;
+    }
+
+    .tier ul {
+      padding-left: 18px;
+      margin: 10px 0 0;
+    }
+
+    .tier li {
+      margin: 8px 0;
+    }
+
+    .sponsorship .cta {
+      margin-top: 40px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 20px;
+      background: #0b1f3a;
+      color: #fff;
+      border-radius: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="container">
+
+    <!-- ABOVE THE FOLD -->
+    <section class="hero reveal" id="top">
+      <div class="hero-inner">
+        <img class="logo" src="logo.png" alt="San Luis Obispo Community Ice Rink Logo" />
+
+        <div class="headline">San Luis Obispo Community Ice Rink</div>
+
+        <p class="subhead">
+          A community-driven effort to build a year-round ice rink for sports, events, and recreation in San Luis Obispo County.
+        </p>
+
+        <!-- Jump links + "tabs" (new pages) -->
+        <div class="pill-row" aria-label="Navigation">
+          <a class="pill" href="#campaign">LA Kings Ticket Campaign</a>
+          <a class="pill" href="#mission">Mission</a>
+          <a class="pill" href="#progress">Where we are</a>
+          <a class="pill" href="#why">Why it matters</a>
+          <a class="pill" href="#how">How rinks get built</a>
+          <a class="pill" href="#get-involved">Get involved</a>
+
+          <a class="pill" href="about.html" target="_blank" rel="noopener">About ↗</a>
+          <a class="pill" href="roadmap.html" target="_blank" rel="noopener">Roadmap ↗</a>
+          <a class="pill" href="faq.html" target="_blank" rel="noopener">FAQ ↗</a>
+          <a class="pill" href="sponsors.html" target="_blank" rel="noopener">Sponsors ↗</a>
+        </div>
+
+        <!-- Campaign callout -->
+        <div class="campaign" id="campaign" aria-label="LA Kings tickets fundraising campaign">
+          <h3>Limited Fundraising Campaign: LA Kings Tickets 🎟️ <span class="tag">Limited pairs</span></h3>
+
+          <p>
+            We’re working with the LA Kings to secure a <strong>limited number of ticket pairs</strong> for our supporters.
+            When our campaign reaches <strong>$25,000</strong>, we’ll share the ticket opportunity with donors who have given <strong>$50+</strong>.
+          </p>
+
+          <div class="rules" role="list" aria-label="Campaign rules">
+            <div class="rule" role="listitem">
+              <div class="k">✅ Eligibility</div>
+              <div class="v">Donate <strong>$50 or more</strong> (anytime during this campaign period) to be eligible.</div>
+            </div>
+            <div class="rule" role="listitem">
+              <div class="k">🎟️ Not guaranteed</div>
+              <div class="v"><strong>Not everyone will receive tickets</strong> — pairs are limited to what the LA Kings provide us.</div>
+            </div>
+            <div class="rule" role="listitem">
+              <div class="k">🏁 Milestone trigger</div>
+              <div class="v">Ticket distribution begins <strong>after we hit $25,000</strong> raised.</div>
+            </div>
+          </div>
+
+          <!-- Auto Progress UI: populated by Netlify Function -->
+          <div class="progress-wrap" aria-hidden="true">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="progress-meta" aria-label="Campaign progress">
+            <div><span id="raisedText">Loading…</span> raised</div>
+            <div>Milestone: <strong>$25,000</strong></div>
+          </div>
+
+          <p class="fine">
+            How it works: Once we reach <strong>$25,000</strong>, we’ll email <strong>$50+</strong> donors with next steps.
+            Ticket pairs will be offered to a <strong>select subset</strong> of eligible donors based on the number of pairs we receive from the LA Kings
+            (e.g., first-qualified, first-served or a simple random drawing — final method will match the quantity we receive and will be stated in the email).
+            Dates/seat locations/redemption details will be provided at that time.
+            This promotion is offered by the SLO Ice Rink Project and is <strong>not sponsored by</strong> the LA Kings organization.
+          </p>
+        </div>
+
+        <!-- Donate buttons -->
+        <div class="cta">
+          <a class="btn gfm shine" href="https://gofund.me/08df813d1">Donate via GoFundMe</a>
+          <a class="btn pp shine" href="https://www.paypal.com/ncp/payment/JSZR9YYERCD72">Donate via PayPal</a>
+        </div>
+
+        <!-- Mailing list signup -->
+        <form class="signup" id="mailingList" action="mailto:info@sloicerink.org" method="post" enctype="text/plain">
+          <input
+            type="email"
+            name="email"
+            id="emailField"
+            placeholder="Email for updates (mailing list)"
+            required
+            autocomplete="email"
+            aria-label="Email address"
+          />
+          <input type="hidden" name="subject" value="SLO Ice Rink — Mailing List Signup" />
+          <button class="btn mail shine" type="submit">Get updates</button>
+        </form>
+        <div class="form-note">
+          We’ll only email major milestones and fundraising updates. (You can unsubscribe anytime.)
+        </div>
+
+        <!-- QR codes -->
+        <div class="qr-wrap">
+          <div class="qr">
+            <img src="slo_ice_rink_gofundme_qr.png" alt="GoFundMe QR Code" />
+            <div class="qr-label">GoFundMe</div>
+            <div class="qr-sub">Scan to donate</div>
+          </div>
+
+          <div class="qr">
+            <img src="slo_ice_rink_paypal_qr.png" alt="PayPal QR Code" />
+            <div class="qr-label">PayPal</div>
+            <div class="qr-sub">Scan to donate</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LONGER MISSION (scroll-down) -->
+    <section class="section reveal" id="mission">
+      <h2>Our Mission</h2>
+      <p class="lead">
+        We’re building a year-round community ice rink in San Luis Obispo County — a home for youth and adult hockey,
+        figure skating, learn-to-skate programs, speed skating, and inclusive recreation.
+        Beyond sport, this facility can flex into a concert and convention venue, bringing year-round cultural and economic energy to the Central Coast.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Ice sports + youth pathways</strong><br>
+          A place for kids to fall in love with skating, build confidence, and thrive in structured programs.
+        </div>
+        <div class="card">
+          <strong>Community gathering space</strong><br>
+          Public sessions, community events, and inclusive programs that make “winter sports” feel local.
+        </div>
+        <div class="card">
+          <strong>Multi-use venue</strong><br>
+          Designed to support concerts and conventions when ice time isn’t scheduled.
+        </div>
+      </div>
+
+      <div class="mini-cta">
+        <a class="mini" href="about.html" target="_blank" rel="noopener">Read the full story →</a>
+        <a class="mini" href="#get-involved">How to help ↓</a>
+      </div>
+    </section>
+
+    <!-- WHERE WE ARE -->
+    <section class="section reveal" id="progress">
+      <h2>Where We Are in the Project</h2>
+      <p class="lead">
+        The groundwork is real — this isn’t just an idea. Here’s what’s already in motion.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Feasibility confirmed</strong><br>
+          A feasibility study completed with Cal Poly supports demand and long-term viability.
+        </div>
+        <div class="card">
+          <strong>Sponsor interest + site exploration</strong><br>
+          Multiple parcels with appropriate zoning have been evaluated, and sponsor conversations are active.
+        </div>
+        <div class="card">
+          <strong>City presentation</strong><br>
+          The concept has been presented to SLO City Council, with encouragement to grow community momentum before matching funds are considered.
+        </div>
+      </div>
+
+      <details>
+        <summary>What kind of site are we looking for?</summary>
+        <div style="margin-top:10px;color:rgba(20,20,20,0.78);">
+          We remain open to additional sites in the <strong>8–10 acre</strong> range, with approximately <strong>1.5 acres</strong> for the rink facility
+          and roughly <strong>7 acres</strong> dedicated to parking to support peak attendance and larger events.
+        </div>
+      </details>
+
+      <div class="mini-cta">
+        <a class="mini" href="roadmap.html" target="_blank" rel="noopener">See the Roadmap →</a>
+        <a class="mini" href="faq.html" target="_blank" rel="noopener">Common questions →</a>
+      </div>
+    </section>
+
+    <!-- WHY IT MATTERS -->
+    <section class="section reveal" id="why">
+      <h2>Why This Rink Matters</h2>
+      <p class="lead">
+        This project is designed to serve an estimated <strong>300,000 residents</strong> across San Luis Obispo County — giving families a new recreational outlet,
+        expanding youth programming, and growing hockey/figure/speed skating close to home.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Sports</strong><br>
+          Hockey • Figure • Speed • Learn-to-skate • Clinics • Tournaments
+        </div>
+        <div class="card">
+          <strong>Families + kids</strong><br>
+          Year-round recreation that creates new traditions and keeps opportunities local.
+        </div>
+        <div class="card">
+          <strong>Events</strong><br>
+          A flexible venue for concerts and conventions as well.
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW RINKS GET BUILT -->
+    <section class="section reveal" id="how">
+      <h2>How Community Support Helps Rinks Get Built</h2>
+      <p class="lead">
+        In many California communities, rinks become real when early supporters create visible momentum — proving demand, attracting sponsors,
+        and strengthening the case for larger gifts and public/private partnerships.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Step 1: Visible community demand</strong><br>
+          Donations, shares, sign-ups, and turnout show decision-makers that the region truly wants the facility.
+        </div>
+        <div class="card">
+          <strong>Step 2: Sponsors + anchor donors</strong><br>
+          As momentum grows, sponsors and major donors are more likely to commit.
+        </div>
+        <div class="card">
+          <strong>Step 3: Partnership + build phase</strong><br>
+          With demand and funding traction, site selection, design, permitting, and construction become actionable.
+        </div>
+      </div>
+
+      <div class="mini-cta">
+        <a class="mini" href="about.html#examples" target="_blank" rel="noopener">See examples →</a>
+      </div>
+    </section>
+
+    <!-- GET INVOLVED -->
+    <section class="section reveal" id="get-involved">
+      <h2>Get Involved</h2>
+      <p class="lead">
+        Your support matters most right now because broad participation is what proves community momentum.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Donate</strong><br>
+          Every donation helps demonstrate demand and builds credibility for bigger funding steps.
+        </div>
+        <div class="card">
+          <strong>Share</strong><br>
+          Share the GoFundMe link with friends, schools, teams, and local businesses.
+        </div>
+        <div class="card">
+          <strong>Introduce a sponsor</strong><br>
+          Know a business that loves the Central Coast? We’d love an intro.
+        </div>
+      </div>
+
+      <div class="mini-cta">
+        <a class="mini" href="sponsors.html" target="_blank" rel="noopener">Sponsor info →</a>
+        <a class="mini" href="mailto:info@sloicerink.org?subject=SLO%20Ice%20Rink%20Support">Email us →</a>
+      </div>
+    </section>
+
+    <!-- Sponsorship Tiers -->
+    <section id="sponsorship" class="sponsorship reveal">
+      <div class="wrap">
+
+        <h2>Become a Sponsorship Partner</h2>
+        <p class="lead">
+          Help build San Luis Obispo’s first year-round community ice rink.
+          Sponsorships provide lasting community impact and meaningful recognition.
+        </p>
+
+        <div class="tier-grid">
+
+          <div class="tier featured">
+            <h3>Founding / Naming Partner</h3>
+            <div class="amount">$5,000,000+</div>
+            <p class="note">Limited availability</p>
+            <ul>
+              <li>Exclusive naming rights to the entire facility</li>
+              <li>Permanent exterior and interior branding</li>
+              <li>Recognition in all media and promotions</li>
+              <li>VIP access and priority scheduling</li>
+              <li>Annual private facility usage</li>
+              <li>Lifetime recognition as a Founding Partner</li>
+            </ul>
+          </div>
+
+          <div class="tier">
+            <h3>Premier Rink Partner</h3>
+            <div class="amount">$2,000,000 – $4,999,999</div>
+            <ul>
+              <li>Naming rights to a primary rink or venue space</li>
+              <li>High-visibility interior signage</li>
+              <li>Recognition at grand opening events</li>
+              <li>Annual hosted community or corporate skate</li>
+            </ul>
+          </div>
+
+          <div class="tier">
+            <h3>Gold Community Partner</h3>
+            <div class="amount">$1,000,000 – $1,999,999</div>
+            <ul>
+              <li>Naming rights to key facility areas</li>
+              <li>Interior signage and donor wall recognition</li>
+              <li>Priority access for engagement events</li>
+            </ul>
+          </div>
+
+          <div class="tier">
+            <h3>Silver Business Partner</h3>
+            <div class="amount">$500,000 – $999,999</div>
+            <ul>
+              <li>Sponsorship of youth or adaptive programs</li>
+              <li>Rink-board or interior signage</li>
+              <li>Recognition at community events</li>
+            </ul>
+          </div>
+
+          <div class="tier">
+            <h3>Bronze Business Partner</h3>
+            <div class="amount">$250,000 – $499,999</div>
+            <ul>
+              <li>Logo placement within the facility</li>
+              <li>Recognition on donor wall and website</li>
+              <li>Staff or client engagement opportunities</li>
+            </ul>
+          </div>
+
+          <div class="tier">
+            <h3>Community Supporter</h3>
+            <div class="amount">$100,000 – $249,999</div>
+            <ul>
+              <li>Name listing on donor wall</li>
+              <li>Website recognition</li>
+              <li>Public acknowledgment at opening</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="cta">
+          <a href="mailto:info@sloicerink.org" class="btn-primary">
+            Inquire About Sponsorship
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="reveal">
+      <div style="margin-top:10px;">
+        Contact: <strong>info@sloicerink.org</strong> • <strong>(862) 400-2660</strong>
+      </div>
+      <div style="margin-top:6px;">
+        © San Luis Obispo Community Ice Rink — Community-driven, year-round ice for the Central Coast.
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Sticky contact bar -->
+  <div class="contact-bar" role="contentinfo" aria-label="Contact and quick actions">
+    <div class="contact-inner">
+      <div class="contact-meta">
+        <span style="font-weight:900;">Contact:</span>
+        <a href="mailto:info@sloicerink.org">info@sloicerink.org</a>
+        <span style="opacity:.7;"> • </span>
+        <a href="tel:+18624002660">(862) 400-2660</a>
+      </div>
+      <div class="contact-actions">
+        <a class="smallbtn" href="#top">Back to top ↑</a>
+        <a class="smallbtn" href="#campaign">Ticket campaign 🎟️</a>
+        <a class="smallbtn" href="about.html" target="_blank" rel="noopener">More info ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Strip accidental :contentReference[oaicite:N]{index=N} artifacts (About / FAQ / Roadmap too, if this script is included there)
+    (function stripOaiCiteArtifactsForever() {
+      // Matches variants like:
+      // :contentReference[oaicite:11]{index=11}
+      // contentReference[oaicite:11]{index=11}
+      // with extra spacing or extra bracket params
+      const pattern = /\s*:?contentReference\[[^\]]*oaicite:\d+[^\]]*\]\{index=\d+\}\s*,?/g;
+
+      function scrubNode(root) {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        let n;
+        while ((n = walker.nextNode())) {
+          // Do NOT use pattern.test with /g; just replace.
+          n.nodeValue = n.nodeValue.replace(pattern, "");
+        }
+      }
+
+      function start() {
+        scrubNode(document.body);
+
+        const mo = new MutationObserver((mutations) => {
+          for (const m of mutations) {
+            for (const added of m.addedNodes || []) {
+              if (added.nodeType === Node.TEXT_NODE) {
+                added.nodeValue = added.nodeValue.replace(pattern, "");
+              } else if (added.nodeType === Node.ELEMENT_NODE) {
+                scrubNode(added);
+              }
+            }
+          }
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start);
+      } else {
+        start();
+      }
+    })();
+
+    // Reveal-on-scroll animation
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) e.target.classList.add('show');
+      }
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+
+    // Auto campaign progress via Netlify Function
+    // IMPORTANT: Create netlify/functions/gofundme.js (server-side) to fetch/parse your GoFundMe total.
+    const GOAL = 25000;
+
+    async function fetchRaised() {
+      const raisedText = document.getElementById("raisedText");
+      const bar = document.getElementById("progressBar");
+
+      try {
+        const res = await fetch("/.netlify/functions/gofundme", { cache: "no-store" });
+        const data = await res.json();
+
+        if (!data || !data.ok) {
+          throw new Error((data && data.error) ? data.error : "No data");
+        }
+
+        const raised = Number(data.raised) || 0;
+        const clamped = Math.max(0, Math.min(raised, GOAL));
+        const pct = (GOAL === 0) ? 0 : (clamped / GOAL) * 100;
+
+        if (raisedText) raisedText.textContent = "$" + clamped.toLocaleString();
+        if (bar) bar.style.width = pct.toFixed(1) + "%";
+      } catch (e) {
+        if (raisedText) raisedText.textContent = "Campaign";
+        if (bar) bar.style.width = "0%";
+        console.warn("GoFundMe progress fetch failed:", e);
+      }
+    }
+
+    fetchRaised();
+    setInterval(fetchRaised, 10 * 60 * 1000);
+
+    // Improve mailto form subject/body (still no backend required)
+    (function enhanceMailtoSignup(){
+      const form = document.getElementById('mailingList');
+      const email = document.getElementById('emailField');
+      if (!form || !email) return;
+
+      form.addEventListener('submit', function(){
+        form.action = "mailto:info@sloicerink.org";
+        const body = [
+          "Please add me to the SLO Ice Rink mailing list.",
+          "",
+          "Email: " + (email.value || ""),
+          "",
+          "I’d like updates on: fundraising milestones, site progress, and community events."
+        ].join("\n");
+
+        form.querySelector('input[name="subject"]').value = "SLO Ice Rink — Mailing List Signup";
+
+        let bodyField = form.querySelector('input[name="body"]');
+        if (!bodyField){
+          bodyField = document.createElement('input');
+          bodyField.type = 'hidden';
+          bodyField.name = 'body';
+          form.appendChild(bodyField);
+        }
+        bodyField.value = body;
+      });
+    })();
+  </script>
+</body>
+</html>
+```

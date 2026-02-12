@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — San Luis Obispo Community Ice Rink</title>
+
+  <style>
+    :root{
+      --navy:#0b1f3a;
+      --navy2:#163a63;
+      --ice:#8fbad9;
+      --accent:#4fa3d1;
+      --mint:#1e8c4a;
+
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --text:#141414;
+      --muted: rgba(20,20,20,0.72);
+
+      --shadow: 0 18px 40px rgba(0,0,0,0.10);
+      --shadow2: 0 10px 24px rgba(0,0,0,0.08);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(79,163,209,0.20), transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(143,186,217,0.18), transparent 48%),
+        radial-gradient(circle at 50% 100%, rgba(11,31,58,0.10), transparent 55%);
+      animation: drift 14s ease-in-out infinite;
+    }
+    @keyframes drift{
+      0%,100%{ filter: blur(0px); transform: translateY(0px); }
+      50%{ filter: blur(1px); transform: translateY(6px); }
+    }
+
+    .container{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 22px 18px 118px;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, rgba(11,31,58,1), rgba(22,58,99,1));
+      color:#fff;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-45%;
+      background:
+        radial-gradient(circle at 25% 25%, rgba(143,186,217,0.35), transparent 56%),
+        radial-gradient(circle at 70% 40%, rgba(79,163,209,0.24), transparent 60%);
+      transform: rotate(10deg);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      z-index:1;
+      padding: 18px 16px 16px;
+      text-align:center;
+    }
+
+    /* Fixes “giant blank logo space” if logo.png has large transparent canvas */
+    .logo{
+      width: min(240px, 92vw);
+      height: auto;
+      max-height: 120px;
+      object-fit: contain;
+      display:block;
+      margin: 6px auto 8px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.22));
+    }
+
+    .headline{
+      font-size: clamp(1.55rem, 2.4vw, 2.05rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin: 2px 0 6px;
+    }
+    .subhead{
+      max-width: 820px;
+      margin: 0 auto 10px;
+      color: rgba(255,255,255,0.92);
+      font-size: 1.02rem;
+    }
+
+    .pill-row{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 10px 0 6px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      text-decoration:none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: transform .15s ease, background .15s ease;
+      white-space:nowrap;
+      backdrop-filter: blur(8px);
+    }
+    .pill:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.16); }
+    .pill:active{ transform: translateY(0px); }
+
+    .section{
+      margin-top: 18px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px 16px;
+      border: 1px solid rgba(11,31,58,0.07);
+    }
+    .section h2{
+      margin: 0 0 8px;
+      color: var(--navy);
+      letter-spacing:-0.02em;
+    }
+    .lead{
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .card{
+      background:#fff;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(11,31,58,0.08);
+    }
+    .card strong{ color: var(--navy); }
+
+    /* Reveal on scroll */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* Sticky contact bar */
+    .contact-bar{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      background: rgba(8,21,40,0.92);
+      color:#fff;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+    }
+    .contact-inner{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap:wrap;
+    }
+    .contact-inner a{
+      color:#fff;
+      text-decoration:none;
+      font-weight: 900;
+    }
+    .contact-inner a:hover{ text-decoration: underline; }
+    .contact-meta{
+      color: rgba(255,255,255,0.84);
+      font-weight: 800;
+      font-size: 0.96rem;
+    }
+    .contact-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .smallbtn{
+      display:inline-block;
+      padding: 9px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      text-decoration:none;
+      font-weight: 900;
+      color:#fff;
+      white-space:nowrap;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .smallbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.16); }
+    .smallbtn:active{ transform: translateY(0px); }
+
+    footer{
+      text-align:center;
+      color: rgba(20,20,20,0.70);
+      margin-top: 18px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="container">
+
+    <section class="hero reveal" id="top">
+      <div class="hero-inner">
+        <img class="logo" src="logo.png" alt="San Luis Obispo Community Ice Rink Logo" loading="eager" decoding="async" onerror="this.style.display='none';" />
+        <div class="headline">About the Project</div>
+        <p class="subhead">
+          More detail for supporters who want to understand where we are — and what comes next.
+        </p>
+
+        <div class="pill-row" aria-label="Navigation">
+          <a class="pill" href="index.html">← Back to home</a>
+          <a class="pill" href="roadmap.html" rel="noopener">Roadmap ↗</a>
+          <a class="pill" href="faq.html" rel="noopener">FAQ ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="summary">
+      <h2>Where We’re At</h2>
+      <p class="lead">
+        A feasibility study has been completed with Cal Poly, sponsor interest exists, potential parcels with appropriate zoning have been evaluated,
+        and the project has been presented to SLO City Council with encouragement to grow community momentum.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Validated demand</strong><br>
+          We’ve taken early steps to confirm community need and long-term viability.
+        </div>
+        <div class="card">
+          <strong>Real site work</strong><br>
+          We’ve evaluated multiple potential parcels that could support an ice + events facility.
+        </div>
+        <div class="card">
+          <strong>Momentum matters</strong><br>
+          Visible support helps unlock larger sponsorships, major gifts, and partnership steps.
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="why-momentum">
+      <h2>Why Community Momentum Matters</h2>
+      <p class="lead">
+        Many successful rink projects accelerate once community demand becomes visible—making sponsorships, major gifts, and partnership steps easier to secure.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Proof of demand</strong><br>
+          Donations, shares, sign-ups, and turnout show decision-makers the region truly wants the facility.
+        </div>
+        <div class="card">
+          <strong>Lower perceived risk</strong><br>
+          Sponsors commit faster when they see broad participation and excitement.
+        </div>
+        <div class="card">
+          <strong>Better leverage</strong><br>
+          Momentum strengthens the case for public/private collaboration and long-term partnerships.
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <h2>Contact</h2>
+      <p class="lead">
+        Email: <strong>info@sloicerink.org</strong><br>
+        Phone: <strong>(862) 400-2660</strong>
+      </p>
+    </section>
+
+    <footer class="reveal">
+      <div style="margin-top:10px;">
+        Contact: <strong>info@sloicerink.org</strong> • <strong>(862) 400-2660</strong>
+      </div>
+      <div style="margin-top:6px;">
+        © San Luis Obispo Community Ice Rink — Community-driven, year-round ice for the Central Coast.
+      </div>
+    </footer>
+  </div>
+
+  <div class="contact-bar" role="contentinfo" aria-label="Contact and quick actions">
+    <div class="contact-inner">
+      <div class="contact-meta">
+        <span style="font-weight:900;">Contact:</span>
+        <a href="mailto:info@sloicerink.org">info@sloicerink.org</a>
+        <span style="opacity:.7;"> • </span>
+        <a href="tel:+18624002660">(862) 400-2660</a>
+      </div>
+      <div class="contact-actions">
+        <a class="smallbtn" href="#top">Back to top ↑</a>
+        <a class="smallbtn" href="index.html">Home ↩</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Strip accidental :contentReference[oaicite:N]{index=N} artifacts (robust)
+    (function stripOaiCiteArtifactsForever() {
+      const pattern = /\s*:?contentReference\[[^\]]*oaicite:\d+[^\]]*\]\{index=\d+\}\s*,?/g;
+
+      function scrubNode(root) {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        let n;
+        while ((n = walker.nextNode())) {
+          n.nodeValue = n.nodeValue.replace(pattern, "");
+        }
+      }
+
+      function start() {
+        scrubNode(document.body);
+
+        const mo = new MutationObserver((mutations) => {
+          for (const m of mutations) {
+            for (const added of m.addedNodes || []) {
+              if (added.nodeType === Node.TEXT_NODE) {
+                added.nodeValue = added.nodeValue.replace(pattern, "");
+              } else if (added.nodeType === Node.ELEMENT_NODE) {
+                scrubNode(added);
+              }
+            }
+          }
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start);
+      } else {
+        start();
+      }
+    })();
+
+    // Reveal-on-scroll animation
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) e.target.classList.add('show');
+      }
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
